@@ -4,11 +4,27 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:SudokuSolverApp"
+    xmlns:views="clr-namespace:SudokuSolverApp.Views"
     Shell.FlyoutBehavior="Disabled">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <TabBar>
+        <ShellContent
+            Title="Home"
+            Icon="icon_about.png"
+            ContentTemplate="{DataTemplate local:MainPage}"
+            Route="MainPage" />
+
+        <!--<ShellContent
+            Title="Second"
+            Icon="icon_notes.png"
+            ContentTemplate="{DataTemplate local:SecondPage}"
+            Route="SecondPage"/>-->
+
+        <ShellContent
+            Title="Manual"  
+            Icon="icon_notes.png"
+            ContentTemplate="{DataTemplate views:ManualInPage}"
+            Route="ManualInPage"/>
+    </TabBar>
 
 </Shell>
