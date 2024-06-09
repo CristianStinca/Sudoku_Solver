@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
+using SudokuSolverApp.ViewModels;
+using SudokuSolverApp.Views;
 
 namespace SudokuSolverApp
 {
@@ -18,6 +20,12 @@ namespace SudokuSolverApp
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
+           
+            builder.Services.AddSingleton<ManualInPage>();
+            builder.Services.AddSingleton<ManualInViewModel>();
+
+            builder.Services.AddTransient<ResultPage>();
+            builder.Services.AddTransient<ResultPageViewModel>();
 
             return builder.Build();
         }
