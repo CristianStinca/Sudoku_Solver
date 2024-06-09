@@ -8,11 +8,11 @@
     Shell.FlyoutBehavior="Disabled">
 
     <TabBar>
-        <ShellContent
+        <!--<ShellContent
             Title="Home"
             Icon="icon_about.png"
             ContentTemplate="{DataTemplate local:MainPage}"
-            Route="MainPage" />
+            Route="MainPage" />-->
 
         <!--<ShellContent
             Title="Second"

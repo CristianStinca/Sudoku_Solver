@@ -3,11 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:ViewModels="clr-namespace:SudokuSolverApp.ViewModels"
              x:Class="SudokuSolverApp.Views.ManualInPage"
-             Title="Introduce sudoku manually">
-
-    <ContentPage.BindingContext>
-        <ViewModels:MatrixViewModel />
-    </ContentPage.BindingContext>
+             Title="Introduce sudoku manually"
+             x:DataType="ViewModels:ManualInViewModel">
 
     <ScrollView>
 
@@ -25,40 +22,57 @@
                       RowDefinitions="*, *, *, 2, *, *, *, 2, *, *, *"
                       HorizontalOptions="FillAndExpand"
                       VerticalOptions="FillAndExpand"
-                      BackgroundColor="Aqua"
+                      ColumnSpacing="2"
+                      RowSpacing="2"
                       BindingContext="{Binding Matrix}">
 
                     <BoxView Grid.Row="3"
                              HeightRequest="2"
                              Grid.ColumnSpan="11"
-                             Color="Black"/>
+                             Color="Transparent"/>
 
                     <BoxView Grid.Row="7"
                              HeightRequest="2"
                              Grid.ColumnSpan="11"
-                             Color="Black"/>
+                             Color="Transparent"/>
 
                     <BoxView Grid.Column="3"
                              WidthRequest="2"
                              Grid.RowSpan="11"
-                             Color="Black"
+                             Color="Transparent"
                              VerticalOptions="FillAndExpand"/>
 
                     <BoxView Grid.Column="7"
                              WidthRequest="2"
                              Grid.RowSpan="11"
                              VerticalOptions="FillAndExpand"
-                             Color="Black"/>
+                             Color="Transparent"/>
 
                 </Grid>
 
             </VerticalStackLayout>
 
             <Button Text="Solve!"
-                    Clicked="Button_Clicked"/>
+                    Command="{Binding SolveCommand}"
+                    />
+                    <!--Clicked="Button_Clicked"-->
 
             <Button Text="Erase board"
                     Clicked="Button_Clicked_1"/>
+
+            <Grid x:Name="NumbersGrid"
+                ColumnDefinitions="*, *, *, *, *, *, *, *, *"
+                RowDefinitions="*"
+                ColumnSpacing="2">
+            </Grid>
+
+            <!--
+            <Entry Placeholder="Enter Task"
+                   Text="{Binding Text}"/>
+
+            <Button Text="Try"
+                    Command="{Binding TextTaskCommand}"/>
+            -->
 
         </VerticalStackLayout>
     </ScrollView>

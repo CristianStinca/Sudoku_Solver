@@ -1,135 +1,84 @@
-﻿using Microsoft.Maui.ApplicationModel.DataTransfer;
+﻿using Microsoft.Maui.Controls.StyleSheets;
 using SudokuLogicLibr.SudokuLogic;
+using SudokuSolverApp.ViewModels;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 
 namespace SudokuSolverApp.Views;
 
 public partial class ManualInPage : ContentPage
 {
-    //Entry[,] matrix = new Entry[9, 9];
-    ObservableCollection<ObservableCollection<Entry>> matrix = new();
-    public ManualInPage()
+    private Button[,] _matrix = new Button[9, 9];
+    private readonly ManualInViewModel _vm;
+
+    public ManualInPage(ManualInViewModel vm)
     {
         InitializeComponent();
+        BindingContext = vm;
+        this._vm = vm;
 
-        for (int i = 0; i < 9; i++)
+        for (int i = 0; i < _matrix.GetLength(0); i++)
         {
-            matrix.Add(new ObservableCollection<Entry>());
-            for (int j = 0; j < 9; j++)
+            for (int j = 0; j < _matrix.GetLength(1); j++)
             {
-                matrix.ElementAt(i).Add(new Entry
-                {
-                    Keyboard = Keyboard.Numeric,
-                    Text = "",
-                    MaxLength = 1,
-                    BackgroundColor = Colors.Gray,
-                    TextColor = Colors.Black,
-                    CursorPosition = 0,
-                    SelectionLength = 5,
-                    HorizontalTextAlignment = TextAlignment.Center,
-                }); ;
-                matrix.ElementAt(i).ElementAt(j).SetBinding(Entry.TextProperty, new Binding($"MatrixData[{i}][{j}]"));
+                Button button = new Button();
+                if (Resources.TryGetValue("Secondary", out object primaryColor))
+                    button.BackgroundColor = (Color)primaryColor;
+
+                button.Padding = 10;
+
+                //if (Application.Current.RequestedTheme == AppTheme.Dark)
+
+                _matrix[i, j] = button;
 
                 int ic = (i + ((i) / 3));
                 int jc = (j + ((j) / 3));
 
-                MatrixGrid.Add(matrix.ElementAt(i).ElementAt(j), ic, jc);
-            }
-        }
-    }
+                int ip = i;
+                int jp = j;
 
-    private int[,] ArrayEntryToInts(ObservableCollection<ObservableCollection<Entry>> input)
-    {
-        //assumnig every list is of the same size
-        int h = input.Count();
-        int w = input.ElementAt(0).Count();
-        int[,] outp = new int[9, 9];
-        for (int i = 0; i < h; i++)
-        {
-            for (int j = 0; j < w; j++)
-            {
-                try
-                {
-                    outp[i, j] = int.Parse(input.ElementAt(j).ElementAt(i).Text);
-                }
-                catch
-                {
-                    outp[i, j] = 0;
-                }
+                button.Clicked += (o, e) => OnBoardClicked(o, e, ip, jp);
+
+                MatrixGrid.Add(button, ic, jc);
             }
         }
 
-        return outp;
-    }
-
-    private async void Button_Clicked(object sender, EventArgs e)
-    {
-        int[,] mat = ArrayEntryToInts(matrix);
-        SudokuBoard sdkMat = new SudokuBoard(mat);
-
-        try
+        for (int i = 1; i < 10; i++)
         {
-            sdkMat.Solve();
-            await DisplayAlert("Sudoku", sdkMat.ToString(), "ok");
-            /*await Shell.Current.GoToAsync($"{nameof(ResultPage)}?",
-                new Dictionary<string, object>
-                {
-                    { "Obj1", mat},
-                }) ;*/
-        }
-        catch (SudokuCannotBeSolvedException)
-        {
-            await DisplayAlert("Error", "Sudoku cannot be solved", "OK");
-        }
-    }
+            Button button = new Button();
+            button.BackgroundColor = Colors.DimGray;
+            button.Text = i.ToString();
+            button.Padding = 0;
+            byte n = (byte)i;
+            button.Clicked += (o, e) => OnNumberClicked(o, e, n);
 
-    private string PrintBoard(int[,] source)
-    {
-        string str = "┌───────┬───────┬───────┐\n";
-        for (int i = 0; i < 9; i++)
-        {
-            str += "│  ";
-            for (int j = 0; j < 9; j++)
-            {
-                if (source[i, j] == -1)
-                    str += " u ";
-                else
-                    str += " " + source[i, j] + " ";
-                if ((j + 1) % 3 == 0 && j != 8)
-                    str += "   │   ";
-                else
-                    str += " ";
-            }
-            str += " │\n";
-            if (i == 8)
-                str += "└───────┴───────┴───────┘\n";
-            else if ((i + 1) % 3 == 0)
-                str += "├───────┼───────┼───────┤\n";
+            NumbersGrid.Add(button, i-1);
         }
 
-        return str;
+        _vm.MatrixChanged += OnMatrixChanged;
     }
 
-    private void Entry_Focused(object sender, FocusEventArgs e)
+    private void OnBoardClicked(object sender, EventArgs e, int i, int j)
     {
-        var entry = sender as Entry;
+        _vm.BoardClicked(i, j);
+    }
 
-        entry.CursorPosition = 0;
-        entry.SelectionLength = entry.Text == null ? 0 : entry.Text.Length;
+    private void OnNumberClicked(object sender, EventArgs e, byte n)
+    {
+        _vm.number = n;
+    }
+
+    private void OnMatrixChanged(object sender, EventArgs e, int i, int j)
+    {
+        if ((e as PropertyChangedEventArgs).PropertyName != "matrix") return;
+
+        _matrix[i, j].Text = _vm.Matrix[i, j].ToString();
     }
 
     private void Button_Clicked_1(object sender, EventArgs e)
     {
-        int h = matrix.Count();
-        int w = matrix.ElementAt(0).Count();
-
-        for (int i = 0; i < h; i++)
-        {
-            for (int j = 0; j < w; j++)
-            {
-                matrix.ElementAt(i).ElementAt(j).Text = "";
-            }
-        }
+        _vm.ClearMatrix();
     }
+
 }
