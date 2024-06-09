@@ -23,10 +23,19 @@ public partial class ManualInPage : ContentPage
             for (int j = 0; j < _matrix.GetLength(1); j++)
             {
                 Button button = new Button();
-                if (Resources.TryGetValue("Secondary", out object primaryColor))
-                    button.BackgroundColor = (Color)primaryColor;
+                if (App.Current.Resources.TryGetValue("White", out object colorvalue1))
+                    button.BackgroundColor = (Color)colorvalue1;
+                
+                if (App.Current.Resources.TryGetValue("Black", out object colorvalue2))
+                    button.TextColor = (Color)colorvalue2;
+                
+                if (App.Current.Resources.TryGetValue("Gray100", out object colorvalue3))
+                    button.BorderColor = (Color)colorvalue3;
 
-                button.Padding = 10;
+                button.Padding = 0;
+                button.CornerRadius = 0;
+                button.BorderWidth = 1;
+                button.FontSize = 20;
 
                 //if (Application.Current.RequestedTheme == AppTheme.Dark)
 
@@ -57,6 +66,21 @@ public partial class ManualInPage : ContentPage
         }
 
         _vm.MatrixChanged += OnMatrixChanged;
+        _vm.PropertyChanged += OnMatrixClear;
+    }
+
+    protected override void LayoutChildren(double x, double y, double width, double height)
+    {
+        base.LayoutChildren(x, y, width, height);
+
+        var w = _matrix[0, 0].Width;
+        for (int i = 0; i < _matrix.GetLength(0); i++)
+        {
+            for (int j = 0; j < _matrix.GetLength(1); j++)
+            {
+                _matrix[i, j].HeightRequest = w;
+            }
+        }
     }
 
     private void OnBoardClicked(object sender, EventArgs e, int i, int j)
@@ -74,6 +98,19 @@ public partial class ManualInPage : ContentPage
         if ((e as PropertyChangedEventArgs).PropertyName != "matrix") return;
 
         _matrix[i, j].Text = _vm.Matrix[i, j].ToString();
+    }
+
+    private void OnMatrixClear(object sender, EventArgs e)
+    {
+        if ((e as PropertyChangedEventArgs).PropertyName != "matrix") return;
+
+        for (int i = 0; i < _matrix.GetLength(0); i++)
+        {
+            for (int j = 0; j < _matrix.GetLength(1); j++)
+            {
+                _matrix[i, j].Text = String.Empty;
+            }
+        }
     }
 
     private void Button_Clicked_1(object sender, EventArgs e)

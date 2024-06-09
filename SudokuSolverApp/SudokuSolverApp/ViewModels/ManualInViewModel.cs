@@ -36,29 +36,11 @@ namespace SudokuSolverApp.ViewModels
         public void BoardClicked(int i, int j)
         {
             if (number is null) return;
-            if (number < 0 || number > 8) return;
+            if (number < 1 || number > 9) return;
 
             Matrix[i, j] = (byte)number;
             //this.OnPropertyChanged(new PropertyChangedEventArgs("matrix"));
             this.MatrixChanged?.Invoke(this, new PropertyChangedEventArgs("matrix"), i, j);
-        }
-
-        private int[,] Transpose(int[,] matrix)
-        {
-            int w = matrix.GetLength(0);
-            int h = matrix.GetLength(1);
-
-            int[,] result = new int[h, w];
-
-            for (int i = 0; i < w; i++)
-            {
-                for (int j = 0; j < h; j++)
-                {
-                    result[j, i] = matrix[i, j];
-                }
-            }
-
-            return result;
         }
 
         [RelayCommand]
@@ -74,7 +56,8 @@ namespace SudokuSolverApp.ViewModels
                 await Shell.Current.GoToAsync(nameof(ResultPage),
                     new Dictionary<string, object>
                         {
-                            {"Text", arr},
+                            {"Solved", arr},
+                            {"Raw", Matrix}
                         });
             }
             catch (SudokuCannotBeSolvedException)
@@ -102,5 +85,4 @@ namespace SudokuSolverApp.ViewModels
             this.OnPropertyChanged("matrix");
         }
     }
-
 }

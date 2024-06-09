@@ -3,52 +3,55 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:ViewModels="clr-namespace:SudokuSolverApp.ViewModels"
              x:Class="SudokuSolverApp.Views.ManualInPage"
-             Title="Introduce sudoku manually"
+             Title="Type Sudoku manually"
              x:DataType="ViewModels:ManualInViewModel">
 
     <ScrollView>
 
         <VerticalStackLayout Padding="16" Spacing="10">
-            <Label
-                Text="The board."/>
+            <!--<Label
+                Text="The board."/>-->
 
             <VerticalStackLayout
                 x:Name="BoxV"
                 HorizontalOptions="FillAndExpand"
                 Spacing="10">
 
-                <Grid x:Name="MatrixGrid"
-                      ColumnDefinitions="*, *, *, 2, *, *, *, 2, *, *, *"
-                      RowDefinitions="*, *, *, 2, *, *, *, 2, *, *, *"
-                      HorizontalOptions="FillAndExpand"
-                      VerticalOptions="FillAndExpand"
-                      ColumnSpacing="2"
-                      RowSpacing="2"
-                      BindingContext="{Binding Matrix}">
+                <Border Stroke="Black"
+                        StrokeThickness="4"
+                        StrokeShape="RoundRectangle 8">
+                    
+                    <Grid x:Name="MatrixGrid"
+                          ColumnDefinitions="*, *, *, 2, *, *, *, 2, *, *, *"
+                          RowDefinitions="*, *, *, 2, *, *, *, 2, *, *, *"
+                          HorizontalOptions="FillAndExpand"
+                          VerticalOptions="FillAndExpand"
+                          BindingContext="{Binding Matrix}">
 
-                    <BoxView Grid.Row="3"
-                             HeightRequest="2"
-                             Grid.ColumnSpan="11"
-                             Color="Transparent"/>
+                        <BoxView Grid.Row="3"
+                                 HeightRequest="2"
+                                 Grid.ColumnSpan="11"
+                                 Color="Black"/>
 
-                    <BoxView Grid.Row="7"
-                             HeightRequest="2"
-                             Grid.ColumnSpan="11"
-                             Color="Transparent"/>
+                        <BoxView Grid.Row="7"
+                                 HeightRequest="2"
+                                 Grid.ColumnSpan="11"
+                                 Color="Black"/>
 
-                    <BoxView Grid.Column="3"
-                             WidthRequest="2"
-                             Grid.RowSpan="11"
-                             Color="Transparent"
-                             VerticalOptions="FillAndExpand"/>
+                        <BoxView Grid.Column="3"
+                                 WidthRequest="2"
+                                 Grid.RowSpan="11"
+                                 Color="Black"
+                                 VerticalOptions="FillAndExpand"/>
 
-                    <BoxView Grid.Column="7"
-                             WidthRequest="2"
-                             Grid.RowSpan="11"
-                             VerticalOptions="FillAndExpand"
-                             Color="Transparent"/>
+                        <BoxView Grid.Column="7"
+                                 WidthRequest="2"
+                                 Grid.RowSpan="11"
+                                 VerticalOptions="FillAndExpand"
+                                 Color="Black"/>
 
-                </Grid>
+                    </Grid>
+                </Border>
 
             </VerticalStackLayout>
 
