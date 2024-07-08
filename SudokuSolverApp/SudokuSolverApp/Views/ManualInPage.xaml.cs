@@ -10,6 +10,8 @@ namespace SudokuSolverApp.Views;
 public partial class ManualInPage : ContentPage
 {
     private Button[,] _matrix = new Button[9, 9];
+    private Button[] _numbers_buttons = new Button[9];
+    private bool _is_loading = false;
     private readonly ManualInViewModel _vm;
 
     public ManualInPage(ManualInViewModel vm)
@@ -56,31 +58,40 @@ public partial class ManualInPage : ContentPage
         for (int i = 1; i < 10; i++)
         {
             Button button = new Button();
-            button.BackgroundColor = Colors.DimGray;
+            button.BackgroundColor = Colors.LightGray;
             button.Text = i.ToString();
             button.Padding = 0;
             byte n = (byte)i;
             button.Clicked += (o, e) => OnNumberClicked(o, e, n);
 
+            _numbers_buttons[i-1] = button;
             NumbersGrid.Add(button, i-1);
         }
 
         _vm.MatrixChanged += OnMatrixChanged;
         _vm.PropertyChanged += OnMatrixClear;
+
+        //LoadingBack.BackgroundColor = Color.FromRgba(0, 0, 0, 150);
     }
 
     protected override void LayoutChildren(double x, double y, double width, double height)
     {
         base.LayoutChildren(x, y, width, height);
 
-        var w = _matrix[0, 0].Width;
-        for (int i = 0; i < _matrix.GetLength(0); i++)
+        MatrixGrid.HeightRequest = MatrixGrid.Width;
+
+        double w = _numbers_buttons[0].Width;
+        for (int i = 0; i < _numbers_buttons.Length; i++)
         {
-            for (int j = 0; j < _matrix.GetLength(1); j++)
-            {
-                _matrix[i, j].HeightRequest = w;
-            }
+            _numbers_buttons[i].HeightRequest = w;
         }
+    }
+
+    protected override void OnNavigatedFrom(NavigatedFromEventArgs args)
+    {
+        base.OnNavigatedFrom(args);
+
+        StopLoading();
     }
 
     private void OnBoardClicked(object sender, EventArgs e, int i, int j)
@@ -90,7 +101,10 @@ public partial class ManualInPage : ContentPage
 
     private void OnNumberClicked(object sender, EventArgs e, byte n)
     {
+        if (_vm.number != null) 
+            _numbers_buttons[(int)_vm.number - 1].BackgroundColor = Colors.LightGray;
         _vm.number = n;
+        _numbers_buttons[n - 1].BackgroundColor = Colors.DimGray;
     }
 
     private void OnMatrixChanged(object sender, EventArgs e, int i, int j)
@@ -113,9 +127,25 @@ public partial class ManualInPage : ContentPage
         }
     }
 
-    private void Button_Clicked_1(object sender, EventArgs e)
+    private void EraseBoardBttn_Clicked(object sender, EventArgs e)
     {
         _vm.ClearMatrix();
     }
 
+    private void Solve_Clicked(object sender, EventArgs e)
+    {
+        StartLoading();
+    }
+
+    private void StartLoading()
+    {
+        LoadingIndicator.IsRunning = true;
+        LoadingBack.BackgroundColor = Colors.Red;//Color.FromRgba(0, 0, 0, 150);
+    }
+
+    private void StopLoading()
+    {
+        LoadingIndicator.IsRunning = false;
+        LoadingBack.BackgroundColor = Colors.Transparent;
+    }
 }

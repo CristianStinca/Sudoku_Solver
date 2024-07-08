@@ -5,19 +5,17 @@
              x:Class="SudokuSolverApp.Views.ResultPage"
              x:DataType="ViewModels:ResultPageViewModel"
              Title="Solved Sudoku!">
-
+    
     <VerticalStackLayout Padding="16" Spacing="10">
         
         <VerticalStackLayout>
-            <Border Stroke="Black"
-                StrokeThickness="4"
-                StrokeShape="RoundRectangle 8">
-                
-                    <Grid x:Name="MatrixGrid"
+            <Grid>
+                <Grid x:Name="MatrixGrid"
                       ColumnDefinitions="*, *, *, 2, *, *, *, 2, *, *, *"
                       RowDefinitions="*, *, *, 2, *, *, *, 2, *, *, *"
                       HorizontalOptions="FillAndExpand"
                       VerticalOptions="FillAndExpand"
+                      Padding="2"
                       BindingContext="{Binding Matrix}">
 
                     <BoxView Grid.Row="3"
@@ -41,9 +39,13 @@
                         Grid.RowSpan="11"
                         VerticalOptions="FillAndExpand"
                         Color="Black"/>
-
                 </Grid>
-            </Border>
+                
+                <Border Stroke="Black"
+                    StrokeThickness="2"
+                    StrokeShape="RoundRectangle 8">
+                </Border>
+            </Grid>
         </VerticalStackLayout>
     </VerticalStackLayout>
 </ContentPage>
