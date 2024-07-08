@@ -24,22 +24,7 @@ public partial class ManualInPage : ContentPage
         {
             for (int j = 0; j < _matrix.GetLength(1); j++)
             {
-                Button button = new Button();
-                if (App.Current.Resources.TryGetValue("White", out object colorvalue1))
-                    button.BackgroundColor = (Color)colorvalue1;
-                
-                if (App.Current.Resources.TryGetValue("Black", out object colorvalue2))
-                    button.TextColor = (Color)colorvalue2;
-                
-                if (App.Current.Resources.TryGetValue("Gray100", out object colorvalue3))
-                    button.BorderColor = (Color)colorvalue3;
-
-                button.Padding = 0;
-                button.CornerRadius = 0;
-                button.BorderWidth = 1;
-                button.FontSize = 20;
-
-                //if (Application.Current.RequestedTheme == AppTheme.Dark)
+                Button button = new Button() { Style = (Style)Application.Current.Resources["BoardButton"] };
 
                 _matrix[i, j] = button;
 
@@ -57,10 +42,9 @@ public partial class ManualInPage : ContentPage
 
         for (int i = 1; i < 10; i++)
         {
-            Button button = new Button();
-            button.BackgroundColor = Colors.LightGray;
+            Button button = new Button() { Style = (Style)Application.Current.Resources["NumberButton"] };
+
             button.Text = i.ToString();
-            button.Padding = 0;
             byte n = (byte)i;
             button.Clicked += (o, e) => OnNumberClicked(o, e, n);
 
@@ -70,8 +54,6 @@ public partial class ManualInPage : ContentPage
 
         _vm.MatrixChanged += OnMatrixChanged;
         _vm.PropertyChanged += OnMatrixClear;
-
-        //LoadingBack.BackgroundColor = Color.FromRgba(0, 0, 0, 150);
     }
 
     protected override void LayoutChildren(double x, double y, double width, double height)
@@ -79,12 +61,7 @@ public partial class ManualInPage : ContentPage
         base.LayoutChildren(x, y, width, height);
 
         MatrixGrid.HeightRequest = MatrixGrid.Width;
-
-        double w = _numbers_buttons[0].Width;
-        for (int i = 0; i < _numbers_buttons.Length; i++)
-        {
-            _numbers_buttons[i].HeightRequest = w;
-        }
+        NumbersGrid.HeightRequest = _numbers_buttons.First().Width;
     }
 
     protected override void OnNavigatedFrom(NavigatedFromEventArgs args)
@@ -101,10 +78,10 @@ public partial class ManualInPage : ContentPage
 
     private void OnNumberClicked(object sender, EventArgs e, byte n)
     {
-        if (_vm.number != null) 
-            _numbers_buttons[(int)_vm.number - 1].BackgroundColor = Colors.LightGray;
+        if (_vm.number != null)
+            _numbers_buttons[(int)_vm.number - 1].Style = (Style)Application.Current.Resources["NumberButton"];
         _vm.number = n;
-        _numbers_buttons[n - 1].BackgroundColor = Colors.DimGray;
+        _numbers_buttons[n - 1].Style = (Style)Application.Current.Resources["NumberButtonSelected"];
     }
 
     private void OnMatrixChanged(object sender, EventArgs e, int i, int j)
@@ -140,12 +117,10 @@ public partial class ManualInPage : ContentPage
     private void StartLoading()
     {
         LoadingIndicator.IsRunning = true;
-        LoadingBack.BackgroundColor = Colors.Red;//Color.FromRgba(0, 0, 0, 150);
     }
 
     private void StopLoading()
     {
         LoadingIndicator.IsRunning = false;
-        LoadingBack.BackgroundColor = Colors.Transparent;
     }
 }

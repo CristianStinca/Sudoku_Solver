@@ -4,8 +4,7 @@
              xmlns:ViewModels="clr-namespace:SudokuSolverApp.ViewModels"
              x:Class="SudokuSolverApp.Views.ManualInPage"
              Title="Type Sudoku manually"
-             x:DataType="ViewModels:ManualInViewModel"
-             x:Name="cp">
+             x:DataType="ViewModels:ManualInViewModel">
     
     <ContentPage.ToolbarItems>
         <!--StyleId="Item1"-->
@@ -28,12 +27,11 @@
 
             <Grid RowDefinitions="*, Auto"
                   Padding="16">
-                
+
                 <VerticalStackLayout Spacing="10">
-                    
-                    <Grid
-                        ColumnDefinitions="*"
-                        RowDefinitions="*">
+
+                    <Grid ColumnDefinitions="*"
+                          RowDefinitions="*">
 
                         <Grid x:Name="MatrixGrid"
                               ColumnDefinitions="*, *, *, 2, *, *, *, 2, *, *, *"
@@ -41,61 +39,50 @@
                               HorizontalOptions="FillAndExpand"
                               VerticalOptions="FillAndExpand"
                               BindingContext="{Binding Matrix}"
-                              Padding="2">
+                              Padding="{Binding StrokeThickness, Source={x:Reference OuterBorder}}"/>
 
-                            <BoxView Grid.Row="3"
-                                     HeightRequest="2"
-                                     Grid.ColumnSpan="11"
-                                     Color="Black"/>
+                        <Border x:Name="OuterBorder"
+                                Style="{StaticResource BoardBorder}"/>
 
-                            <BoxView Grid.Row="7"
-                                     HeightRequest="2"
-                                     Grid.ColumnSpan="11"
-                                     Color="Black"/>
-
-                            <BoxView Grid.Column="3"
-                                     WidthRequest="2"
-                                     Grid.RowSpan="11"
-                                     Color="Black"
-                                     VerticalOptions="FillAndExpand"/>
-
-                            <BoxView Grid.Column="7"
-                                     WidthRequest="2"
-                                     Grid.RowSpan="11"
-                                     VerticalOptions="FillAndExpand"
-                                     Color="Black"/>
-
+                        <Grid ColumnDefinitions="*, 2, *, 2, *, 4, *, 2, *, 2, *, 4, *, 2, *, 2, *"
+                              Padding="{Binding StrokeThickness, Source={x:Reference OuterBorder}}">
+                            <Rectangle Grid.Column="1"/>
+                            <Rectangle Grid.Column="3"/>
+                            <Rectangle Grid.Column="5"/>
+                            <Rectangle Grid.Column="7"/>
+                            <Rectangle Grid.Column="9"/>
+                            <Rectangle Grid.Column="11"/>
+                            <Rectangle Grid.Column="13"/>
+                            <Rectangle Grid.Column="15"/>
                         </Grid>
 
-                        <Border Stroke="{Binding BackgroundColor, Source={x:Reference cp}}"
-                                StrokeThickness="2"/>
-                        
-                        <Border Stroke="Black"
-                                StrokeThickness="2"
-                                StrokeShape="RoundRectangle 8"/>
-
+                        <Grid RowDefinitions="*, 2, *, 2, *, 4, *, 2, *, 2, *, 4, *, 2, *, 2, *"
+                              Padding="{Binding StrokeThickness, Source={x:Reference OuterBorder}}">
+                            <Rectangle Grid.Row="1"/>
+                            <Rectangle Grid.Row="3"/>
+                            <Rectangle Grid.Row="5"/>
+                            <Rectangle Grid.Row="7"/>
+                            <Rectangle Grid.Row="9"/>
+                            <Rectangle Grid.Row="11"/>
+                            <Rectangle Grid.Row="13"/>
+                            <Rectangle Grid.Row="15"/>
+                        </Grid>
                     </Grid>
 
-                <Grid x:Name="NumbersGrid"
-                    ColumnDefinitions="*, *, *, *, *, *, *, *, *"
-                    RowDefinitions="*"
-                    ColumnSpacing="2">
-                </Grid>
+                    <Grid x:Name="NumbersGrid"
+                          ColumnDefinitions="*, *, *, *, *, *, *, *, *"
+                          RowDefinitions="*"
+                          ColumnSpacing="2"/>
 
                 </VerticalStackLayout>
-                
+
                 <Button Grid.Row="1"
                         Text="Solve!"
                         Clicked="Solve_Clicked"
                         Command="{Binding SolveCommand}"/>
-                
+
             </Grid>
-            
-            <Rectangle x:Name="LoadingBack"
-                       HorizontalOptions="FillAndExpand"
-                       VerticalOptions="FillAndExpand"
-                       BackgroundColor="Transparent"/>
-            
+
             <ActivityIndicator IsRunning="False"
                                x:Name="LoadingIndicator"
                                WidthRequest="100"/>
