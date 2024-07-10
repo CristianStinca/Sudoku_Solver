@@ -2,18 +2,20 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:ViewModels="clr-namespace:SudokuSolverApp.ViewModels"
+             x:DataType="ViewModels:ManualInViewModel"
              x:Class="SudokuSolverApp.Views.ManualInPage"
-             Title="Type Sudoku manually"
-             x:DataType="ViewModels:ManualInViewModel">
-    
+             Title="Type Sudoku manually">
+
     <ContentPage.ToolbarItems>
-        <!--StyleId="Item1"-->
+
+        <!--TODO: the IconImageSource does not work. Find a workaround?-->
         <ToolbarItem Order="Secondary"
                      Text="Erase board"
+                     IconImageSource="delete_icon.png"
                      Clicked="EraseBoardBttn_Clicked"/>
-        
-        <!--StyleId="Item2"-->
+
         <ToolbarItem Order="Secondary"
+                     IconImageSource="save_icon.png"
                      Text="Save board"/>
         
     </ContentPage.ToolbarItems>

@@ -32,6 +32,7 @@
     <!-- Images -->
     <MauiImage Include="Resources\Images\*" />
     <MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
+	<MauiImage Update="Resources\Images\splash.svg" BaseSize="208,208" />
     <!-- Custom Fonts -->
     <MauiFont Include="Resources\Fonts\*" />
     <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
@@ -40,9 +41,10 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Maui.Camera" Version="1.0.3" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-    <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.70" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.70" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.7" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SudokuLogicLibr\SudokuLogicLibr\SudokuLogicLibr.csproj" />
@@ -58,4 +60,7 @@
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
   </ItemGroup>
+	<ItemGroup Condition="$(TargetFramework.Contains('android')) == true">
+	    <PackageReference Include="IronOcr.Android" Version="2024.7.13" />
+	</ItemGroup>
 </Project>
