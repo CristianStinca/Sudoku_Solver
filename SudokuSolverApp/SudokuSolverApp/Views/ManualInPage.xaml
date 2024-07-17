@@ -4,18 +4,15 @@
              xmlns:ViewModels="clr-namespace:SudokuSolverApp.ViewModels"
              x:DataType="ViewModels:ManualInViewModel"
              x:Class="SudokuSolverApp.Views.ManualInPage"
-             Title="Type Sudoku manually">
+             Title="Enter Sudoku">
 
     <ContentPage.ToolbarItems>
 
-        <!--TODO: the IconImageSource does not work. Find a workaround?-->
         <ToolbarItem Order="Secondary"
                      Text="Erase board"
-                     IconImageSource="delete_icon.png"
                      Clicked="EraseBoardBttn_Clicked"/>
 
         <ToolbarItem Order="Secondary"
-                     IconImageSource="save_icon.png"
                      Text="Save board"/>
         
     </ContentPage.ToolbarItems>
@@ -31,6 +28,25 @@
                   Padding="16">
 
                 <VerticalStackLayout Spacing="10">
+
+                    <Grid ColumnDefinitions="4*, *, 4*, *, 4*, *, 4*">
+                        <BoxView Grid.Column="1"
+                                 HorizontalOptions="FillAndExpand"
+                                 Color="Transparent"/>
+                        
+                        <Button Grid.Column="0"
+                                Text="CameraIcon"/>
+
+                        <Button Grid.Column="2"
+                                Text="LoadImageIcon"
+                                Clicked="PullFromMemoryBttn_Clicked"/>
+
+                        <Button Grid.Column="4"
+                                Text="SaveIcon"/>
+
+                        <Button Grid.Column="6"
+                                Text="EraseIcon"/>
+                    </Grid>
 
                     <Grid ColumnDefinitions="*"
                           RowDefinitions="*">
@@ -69,6 +85,21 @@
                             <Rectangle Grid.Row="13"/>
                             <Rectangle Grid.Row="15"/>
                         </Grid>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="Auto, *, Auto, *, Auto">
+                        <Button Grid.Column="0"
+                                Text="Back"/>
+
+                        <BoxView Grid.Column="1"
+                                 HorizontalOptions="FillAndExpand"
+                                 Color="Transparent"/>
+
+                        <Button Grid.Column="2"
+                                Text="Delete"/>
+
+                        <Button Grid.Column="4"
+                                Text="Forw"/>
                     </Grid>
 
                     <Grid x:Name="NumbersGrid"

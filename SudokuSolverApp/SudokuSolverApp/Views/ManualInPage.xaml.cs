@@ -4,6 +4,7 @@ using SudokuSolverApp.ViewModels;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using TesseractOcrMaui;
 
 namespace SudokuSolverApp.Views;
 
@@ -14,11 +15,12 @@ public partial class ManualInPage : ContentPage
     private bool _is_loading = false;
     private readonly ManualInViewModel _vm;
 
-    public ManualInPage(ManualInViewModel vm)
+    public ManualInPage(ManualInViewModel vm, ITesseract tesseract)
     {
         InitializeComponent();
         BindingContext = vm;
         this._vm = vm;
+        this._vm.SetTesseract(tesseract);
 
         for (int i = 0; i < _matrix.GetLength(0); i++)
         {
@@ -102,6 +104,17 @@ public partial class ManualInPage : ContentPage
                 _matrix[i, j].Text = String.Empty;
             }
         }
+    }
+
+    private async void PullFromMemoryBttn_Clicked(object sender, EventArgs e)
+    {
+        StartLoading();
+        bool result = await this._vm.PullFromMemory();
+
+        if (result == false)
+            await DisplayAlert("Result", "The image couldn't be read!", "OK");
+
+        StopLoading();
     }
 
     private void EraseBoardBttn_Clicked(object sender, EventArgs e)
