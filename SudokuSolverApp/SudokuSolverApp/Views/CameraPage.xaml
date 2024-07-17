@@ -13,13 +13,13 @@
         <drawables:SubtractClippingDrawable x:Key="subtractClippingDrawable" />
     </ContentPage.Resources>
 
-    <!--<Grid>
+    <Grid>
         <toolkit:CameraView x:Name="Camera" MediaCaptured="Camera_MediaCaptured"/>
 
         <Grid VerticalOptions="FillAndExpand"
               HorizontalOptions="FillAndExpand"
               RowDefinitions="Auto, *, Auto">
-            
+
             <BoxView Color="{StaticResource Black}"
                      Opacity="0.4"
                      HeightRequest="70"/>
@@ -31,7 +31,7 @@
 
             <Image Grid.Row="0" x:Name="image" VerticalOptions="FillAndExpand"/>
 
-            
+
 
             <BoxView Grid.Row="2"
                      Color="{StaticResource Black}"
@@ -47,8 +47,8 @@
                         Clicked="Button_Clicked"/>
             </VerticalStackLayout>
         </Grid>
-    </Grid>-->
-    <Grid RowDefinitions="600, *">
+    </Grid>
+    <!--<Grid RowDefinitions="600, *">
 
         <skia:SKCanvasView x:Name="mycanvas" 
                            PaintSurface="Mycanvas_PaintSurface"
@@ -81,5 +81,5 @@
 
         </Grid>
 
-    </Grid>
+    </Grid>-->
 </ContentPage>

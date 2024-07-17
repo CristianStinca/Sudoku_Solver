@@ -19,6 +19,12 @@
             Icon="icon_about.png"
             ContentTemplate="{DataTemplate views:CameraPage}"
             Route="CameraPage"/>
+
+        <ShellContent
+            Title="Debugging"  
+            Icon="icon_about.png"
+            ContentTemplate="{DataTemplate views:DebuggingPage}"
+            Route="CameraPage"/>
     </TabBar>
 
 </Shell>

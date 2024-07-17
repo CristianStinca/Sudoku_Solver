@@ -4,18 +4,15 @@
              xmlns:ViewModels="clr-namespace:SudokuSolverApp.ViewModels"
              x:DataType="ViewModels:ManualInViewModel"
              x:Class="SudokuSolverApp.Views.ManualInPage"
-             Title="Type Sudoku manually">
+             Title="Enter Sudoku">
 
     <ContentPage.ToolbarItems>
 
-        <!--TODO: the IconImageSource does not work. Find a workaround?-->
         <ToolbarItem Order="Secondary"
                      Text="Erase board"
-                     IconImageSource="delete_icon.png"
                      Clicked="EraseBoardBttn_Clicked"/>
 
         <ToolbarItem Order="Secondary"
-                     IconImageSource="save_icon.png"
                      Text="Save board"/>
         
     </ContentPage.ToolbarItems>
@@ -31,6 +28,34 @@
                   Padding="16">
 
                 <VerticalStackLayout Spacing="10">
+
+                    <Grid ColumnDefinitions="Auto, *, Auto, *, Auto, *, Auto">
+                        <BoxView Grid.Column="1"
+                                 HorizontalOptions="FillAndExpand"
+                                 Color="Transparent"/>
+
+                        <ImageButton Grid.Column="0"
+                                     HeightRequest="40"
+                                     WidthRequest="40"
+                                     Source="camera.png"/>
+
+                        <ImageButton Grid.Column="2"
+                                     HeightRequest="40"
+                                     WidthRequest="40"
+                                     Source="gallery.png"
+                                     Clicked="PullFromMemoryBttn_Clicked"/>
+
+                        <ImageButton Grid.Column="4"
+                                     HeightRequest="40"
+                                     WidthRequest="40"
+                                     Source="save.png"/>
+
+                        <ImageButton Grid.Column="6"
+                                     HeightRequest="40"
+                                     WidthRequest="40"
+                                     Source="trash.png"
+                                     Clicked="EraseBoardBttn_Clicked"/>
+                    </Grid>
 
                     <Grid ColumnDefinitions="*"
                           RowDefinitions="*">
@@ -69,6 +94,27 @@
                             <Rectangle Grid.Row="13"/>
                             <Rectangle Grid.Row="15"/>
                         </Grid>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="Auto, *, Auto, *, Auto">
+                        <ImageButton Grid.Column="0"
+                                     HeightRequest="40"
+                                     WidthRequest="40"
+                                     Source="back.png"/>
+
+                        <BoxView Grid.Column="1"
+                                 HorizontalOptions="FillAndExpand"
+                                 Color="Transparent"/>
+
+                        <ImageButton Grid.Column="2"
+                                     HeightRequest="40"
+                                     WidthRequest="40"
+                                     Source="clear.png"/>
+
+                        <ImageButton Grid.Column="4"
+                                     HeightRequest="40"
+                                     WidthRequest="40"
+                                     Source="{AppThemeBinding Dark=forward.png, Light=forward.png}"/>
                     </Grid>
 
                     <Grid x:Name="NumbersGrid"
