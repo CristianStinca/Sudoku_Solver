@@ -4,6 +4,7 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:drawables="clr-namespace:SudokuSolverApp.Drawables"
              xmlns:ViewModels="clr-namespace:SudokuSolverApp.ViewModels"
+             xmlns:skia="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls"
              x:DataType="ViewModels:CameraViewModel"
              x:Class="SudokuSolverApp.Views.CameraPage"
              Title="CameraPage">
@@ -12,12 +13,13 @@
         <drawables:SubtractClippingDrawable x:Key="subtractClippingDrawable" />
     </ContentPage.Resources>
 
-    <Grid>
-        <toolkit:CameraView x:Name="Camera"/>
+    <!--<Grid>
+        <toolkit:CameraView x:Name="Camera" MediaCaptured="Camera_MediaCaptured"/>
 
         <Grid VerticalOptions="FillAndExpand"
               HorizontalOptions="FillAndExpand"
               RowDefinitions="Auto, *, Auto">
+            
             <BoxView Color="{StaticResource Black}"
                      Opacity="0.4"
                      HeightRequest="70"/>
@@ -26,18 +28,58 @@
                           x:Name="CameraShapeBox"
                           Opacity="0.3"
                           Drawable="{StaticResource subtractClippingDrawable}"/>
+
+            <Image Grid.Row="0" x:Name="image" VerticalOptions="FillAndExpand"/>
+
             
-            <Image Grid.Row="1" x:Name="image" VerticalOptions="FillAndExpand"/>
 
             <BoxView Grid.Row="2"
                      Color="{StaticResource Black}"
                      Opacity="0.4"
                      HeightRequest="100"/>
 
-            <Button Grid.Row="2"
-                    Text="SMILE MFK"
-                    Command="{Binding CaptureImageCommand, Source={x:Reference Camera}}"
-                    CommandParameter="{Binding Token}"/>
+            <VerticalStackLayout Grid.Row="2">
+                <Button Text="SMILE MFK"
+                        Command="{Binding CaptureImageCommand, Source={x:Reference Camera}}"
+                        CommandParameter="{Binding Token}"/>
+
+                <Button Text="erase_img"
+                        Clicked="Button_Clicked"/>
+            </VerticalStackLayout>
         </Grid>
+    </Grid>-->
+    <Grid RowDefinitions="600, *">
+
+        <skia:SKCanvasView x:Name="mycanvas" 
+                           PaintSurface="Mycanvas_PaintSurface"
+                           HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>
+
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*,*,*,*,*"
+              ColumnSpacing="5"
+              Padding="5, 0, 5, 0">
+            
+            <Button Text="LESGOO"
+                    Grid.Column="0"
+                    Clicked="Button_Clicked_1"/>
+            
+            <Button Text="Orig"
+                    Grid.Column="1"
+                    Clicked="Button_Clicked_2"/>
+
+            <Button Text="0, 0"
+                    Grid.Column="2"
+                    Clicked="Button_Clicked_3"/>
+
+            <Button Text="Contoured"
+                    Grid.Column="3"
+                    Clicked="Button_Clicked_4"/>
+            
+            <Button Text="Deskw"
+                    Grid.Column="4"
+                    Clicked="Button_Clicked_5"/>
+
+        </Grid>
+
     </Grid>
 </ContentPage>

@@ -1,7 +1,10 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
+using Plugin.Maui.OCR;
+using SkiaSharp.Views.Maui.Controls.Hosting;
 using SudokuSolverApp.ViewModels;
 using SudokuSolverApp.Views;
+using TesseractOcrMaui;
 
 namespace SudokuSolverApp
 {
@@ -13,14 +16,21 @@ namespace SudokuSolverApp
             builder
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkitCamera()
+                .UseSkiaSharp()
+                .UseOcr()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
+            builder.Services.AddTesseractOcr(
+            files =>
+            {
+                files.AddFile("eng.traineddata");
+            });
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
            
             builder.Services.AddSingleton<ManualInPage>();

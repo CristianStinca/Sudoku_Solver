@@ -37,14 +37,23 @@
     <MauiFont Include="Resources\Fonts\*" />
     <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
     <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+    <MauiAsset Include="Resources\Raw\tessdata\*" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Maui.Camera" Version="1.0.3" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="Emgu.CV" Version="4.9.0.5494" />
+    <PackageReference Include="Emgu.CV.runtime.maui.mini" Version="4.9.0.5494" />
+    <PackageReference Include="Emgu.CV.UI" Version="4.9.0.5494" />
     <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.70" />
     <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.70" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Maui.Graphics.Skia" Version="8.0.70" />
+    <PackageReference Include="Plugin.Maui.OCR" Version="1.0.11" />
+    <PackageReference Include="SkiaSharp" Version="2.88.8" />
+    <PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.8" />
     <PackageReference Include="System.Drawing.Common" Version="8.0.7" />
+    <PackageReference Include="TesseractOcrMaui" Version="1.2.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SudokuLogicLibr\SudokuLogicLibr\SudokuLogicLibr.csproj" />
@@ -60,7 +69,10 @@
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
   </ItemGroup>
-	<ItemGroup Condition="$(TargetFramework.Contains('android')) == true">
-	    <PackageReference Include="IronOcr.Android" Version="2024.7.13" />
-	</ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
+    <PackageReference Include="Emgu.CV.runtime.maui.mini.android">
+      <Version>4.9.0.5494</Version>
+    </PackageReference>
+	<PackageReference Include="Xamarin.AndroidX.Collection.Ktx" Version="1.4.0.5" />
+  </ItemGroup>
 </Project>
