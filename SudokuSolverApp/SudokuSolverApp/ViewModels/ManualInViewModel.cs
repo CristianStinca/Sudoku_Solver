@@ -9,10 +9,12 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using TesseractOcrMaui;
 
 namespace SudokuSolverApp.ViewModels
 {
+    [QueryProperty("CameraImagePath", "ImagePath")]
     public partial class ManualInViewModel : ObservableObject
     {
         public event MatrixCalculatedHandler MatrixCalculated;
@@ -26,6 +28,9 @@ namespace SudokuSolverApp.ViewModels
         
         public event MatrixFinishedHandler MatrixFinished;
         public delegate void MatrixFinishedHandler();
+        
+        public event LeftToCameraPageHandler LeftToCameraPage;
+        public delegate void LeftToCameraPageHandler();
 
         public event MatrixChangedHandler MatrixChanged;
         public delegate void MatrixChangedHandler(object obj, EventArgs e, int i, int j);
@@ -37,6 +42,9 @@ namespace SudokuSolverApp.ViewModels
 
         [ObservableProperty]
         string text;
+
+        [ObservableProperty]
+        string cameraImagePath;
 
         //public byte? number;
         public class Cell
@@ -133,9 +141,16 @@ namespace SudokuSolverApp.ViewModels
             Console.WriteLine(Text);
         }
 
+        [RelayCommand]
+        async Task OpenCamera()
+        {
+            LeftToCameraPage.Invoke();
+            await Shell.Current.GoToAsync(nameof(CameraPage));
+        }
+
         public void PullFromMemory()
         {
-            var t = Task.Run(async () =>
+            Task.Run(async () =>
             {
                 string cachePath = Path.Combine(FileSystem.Current.CacheDirectory, "camera-view-cache.jpg");
                 FileResult result = await MediaPicker.PickPhotoAsync(new MediaPickerOptions
@@ -146,7 +161,6 @@ namespace SudokuSolverApp.ViewModels
                 if (result == null)
                 {
                     MatrixFailedReadImg?.Invoke();
-                    //WeakReferenceMessenger.Default.Send("DOWNLOAD FAILED");
                 }
 
                 var stream = await result.OpenReadAsync();
@@ -156,37 +170,32 @@ namespace SudokuSolverApp.ViewModels
                 localFileStream.Dispose();
                 stream.Dispose();
 
-                sbyte[,] arr = null;
+                SetMatrixFromPathOCR(cachePath);
+            });
+        }
+
+        public void PullFromCamera()
+        {
+            SetMatrixFromPathOCR(CameraImagePath);
+        }
+
+        private void SetMatrixFromPathOCR(string cachePath)
+        {
+            var t = Task.Run(async () =>
+            {
+                int[,] arr = null;
                 try
                 {
                     arr = await imageToSudokuService.GetFromPathAsync(cachePath);
-                    //this.temp_matrix = arr;
                 }
                 catch (ArgumentException ex)
                 {
                     MatrixFailedCalculated?.Invoke();
-                    //WeakReferenceMessenger.Default.Send("READING FAILED");
-                    //Debug.WriteLine(ex.Message);
-                    //return false;
                 }
 
-                //WeakReferenceMessenger.Default.Send("TASK FINISHED");
-
-                if (arr != null)
-                {
-                    for (int i = 0; i < arr.GetLength(0); i++)
-                    {
-                        for (int j = 0; j < arr.GetLength(1); j++)
-                        {
-                            temp_matrix[i, j] = (int)arr[i, j];
-                            //Debug.WriteLine($"current ind: i = {i}, j = {j}");
-                        }
-                    }
-                }
+                temp_matrix = arr;
 
                 MatrixCalculated?.Invoke();
-
-                //Debug.WriteLine(Matrix.ToString());
             });
 
             t.ContinueWith(end =>

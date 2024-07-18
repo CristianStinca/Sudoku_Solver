@@ -14,12 +14,13 @@
             ContentTemplate="{DataTemplate views:ManualInPage}"
             Route="ManualInPage"/>
 
+        <!--
         <ShellContent
             Title="Camera"  
             Icon="icon_about.png"
             ContentTemplate="{DataTemplate views:CameraPage}"
             Route="CameraPage"/>
-
+-->
         <ShellContent
             Title="Debugging"  
             Icon="icon_about.png"

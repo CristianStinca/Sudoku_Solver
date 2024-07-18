@@ -5,6 +5,7 @@ using SudokuSolverApp.ViewModels;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing.Text;
 using TesseractOcrMaui;
 
 namespace SudokuSolverApp.Views;
@@ -16,12 +17,15 @@ public partial class ManualInPage : ContentPage
     private bool _is_loading = false;
     private readonly ManualInViewModel _vm;
 
+    private bool _left_to_camera = false;
+
     public ManualInPage(ManualInViewModel vm, ITesseract tesseract)
     {
         InitializeComponent();
         BindingContext = vm;
         this._vm = vm;
         this._vm.SetTesseract(tesseract);
+
 
         for (int i = 0; i < _matrix.GetLength(0); i++)
         {
@@ -62,6 +66,7 @@ public partial class ManualInPage : ContentPage
         _vm.MatrixFinished += OnMatrixFinished;
         _vm.MatrixFailedCalculated += OnMatrixFailedCalculated;
         _vm.MatrixFailedReadImg += OnMatrixFailedReadImg;
+        _vm.LeftToCameraPage += OnNavigatedToCamera;
     }
 
     protected override void LayoutChildren(double x, double y, double width, double height)
@@ -77,6 +82,23 @@ public partial class ManualInPage : ContentPage
         base.OnNavigatedFrom(args);
 
         StopLoading();
+    }
+
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+
+        if (_left_to_camera)
+        {
+            _left_to_camera = false;
+            _vm.PullFromCamera();
+            StartLoading();
+        }
+    }
+
+    private void OnNavigatedToCamera()
+    {
+        _left_to_camera = true;
     }
 
     private void OnBoardClicked(object sender, EventArgs e, int i, int j)
@@ -159,6 +181,8 @@ public partial class ManualInPage : ContentPage
         {
             await DisplayAlert("Result", "Everything was read!", "OK");
         });
+
+        StopLoading();
     }
     public void OnMatrixFinished()
     {
@@ -170,6 +194,8 @@ public partial class ManualInPage : ContentPage
         {
             await DisplayAlert("Result", "Cannot extract from the image!", "OK");
         });
+
+        StopLoading();
     }
     public void OnMatrixFailedReadImg()
     {
@@ -177,6 +203,8 @@ public partial class ManualInPage : ContentPage
         {
             await DisplayAlert("Result", "Image cannot be saved!", "OK");
         });
+
+        StopLoading();
     }
 
     private void EraseBoardBttn_Clicked(object sender, EventArgs e)

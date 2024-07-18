@@ -43,7 +43,7 @@ namespace SudokuSolverApp.Models
             };
         }
 
-        public async Task<sbyte[,]> GetFromPathAsync(string imagePath)
+        public async Task<int[,]> GetFromPathAsync(string imagePath)
         {
             Image<Bgr, byte> img = new(imagePath);
             Image<Gray, byte> gray = new(imagePath);
@@ -102,7 +102,7 @@ namespace SudokuSolverApp.Models
             var puzzle = FourPointTranform(img, puzzle_contour);
             var warped = FourPointTranform(gray, puzzle_contour);
 
-            sbyte[,] out_arr = new sbyte[9, 9];
+            int[,] out_arr = new int[9, 9];
             int cell_size = warped.Width / 9;
 
             int y = 0;
@@ -205,7 +205,7 @@ namespace SudokuSolverApp.Models
             return rect;
         }
 
-        private sbyte ExtractDigit<T1, T2>(Image<T1, T2> cell, out Image<T1, T2> bw_cell) where T1 : struct, Emgu.CV.IColor where T2 : new()
+        private int ExtractDigit<T1, T2>(Image<T1, T2> cell, out Image<T1, T2> bw_cell) where T1 : struct, Emgu.CV.IColor where T2 : new()
         {
             bw_cell = cell.Clone();
             var thresh = cell.Clone();
@@ -249,7 +249,7 @@ namespace SudokuSolverApp.Models
             }
 
             if (res.FinishedWithSuccess() && int.TryParse(res.RecognisedText, out int num) && num < 10 && num > 0 && res.Confidence > 0.60f)
-                return (sbyte)num;
+                return num;
             else
                 return 0;
         }

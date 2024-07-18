@@ -37,6 +37,7 @@
                         <ImageButton Grid.Column="0"
                                      HeightRequest="40"
                                      WidthRequest="40"
+                                     Command="{Binding OpenCameraCommand}"
                                      Source="camera.png"/>
 
                         <ImageButton Grid.Column="2"

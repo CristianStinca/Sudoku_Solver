@@ -42,9 +42,6 @@
                 <Button Text="SMILE MFK"
                         Command="{Binding CaptureImageCommand, Source={x:Reference Camera}}"
                         CommandParameter="{Binding Token}"/>
-
-                <Button Text="erase_img"
-                        Clicked="Button_Clicked"/>
             </VerticalStackLayout>
         </Grid>
     </Grid>
