@@ -124,7 +124,7 @@ namespace SudokuSolverApp.Models
 
                     x += cell_size;
                 }
-F                //Debug.WriteLine($"___ {row}");
+                //Debug.WriteLine($"___ {row}");
 
                 y += cell_size;
             }

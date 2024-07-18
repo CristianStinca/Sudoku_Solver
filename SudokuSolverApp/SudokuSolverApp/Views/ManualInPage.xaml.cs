@@ -49,7 +49,7 @@ public partial class ManualInPage : ContentPage
 
             button.Text = i.ToString();
             byte n = (byte)i;
-            button.Clicked += (o, e) => OnNumberClicked(o, e, n);
+            button.Clicked += (o, e) => _vm.NumberClicked(n);
 
             _numbers_buttons[i-1] = button;
             NumbersGrid.Add(button, i-1);
@@ -81,22 +81,24 @@ public partial class ManualInPage : ContentPage
 
     private void OnBoardClicked(object sender, EventArgs e, int i, int j)
     {
-        _vm.BoardClicked(i, j);
-    }
+        if (_vm.selectedCell != null)
+            _matrix[_vm.selectedCell.i, _vm.selectedCell.j].Style = (Style)Application.Current.Resources["BoardButton"];
 
-    private void OnNumberClicked(object sender, EventArgs e, byte n)
-    {
-        if (_vm.number != null)
-            _numbers_buttons[(int)_vm.number - 1].Style = (Style)Application.Current.Resources["NumberButton"];
-        _vm.number = n;
-        _numbers_buttons[n - 1].Style = (Style)Application.Current.Resources["NumberButtonSelected"];
+        _vm.BoardClicked(i, j);
+
+        _matrix[i, j].Style = (Style)Application.Current.Resources["BoardButtonSelected"];
     }
 
     private void OnMatrixChanged(object sender, EventArgs e, int i, int j)
     {
         if ((e as PropertyChangedEventArgs).PropertyName != "matrix") return;
 
-        _matrix[i, j].Text = _vm.Matrix[i, j].ToString();
+        int val = _vm.Matrix[i, j];
+
+        if (val == 0)
+            _matrix[i, j].Text = String.Empty;
+        else
+            _matrix[i, j].Text = val.ToString();
     }
 
     private void OnMatrixClear(object sender, EventArgs e)
@@ -179,6 +181,12 @@ public partial class ManualInPage : ContentPage
 
     private void EraseBoardBttn_Clicked(object sender, EventArgs e)
     {
+        if (_vm.selectedCell != null)
+        {
+            _matrix[_vm.selectedCell.i, _vm.selectedCell.j].Style = (Style)Application.Current.Resources["BoardButton"];
+            _vm.selectedCell = null;
+        }
+
         _vm.ClearMatrix();
     }
 

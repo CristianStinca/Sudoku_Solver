@@ -75,6 +75,11 @@
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource Tertiary}}"/>
     </Style>
 
+    <Style x:Key="BoardButtonSelected" BasedOn="{StaticResource BoardButton}" TargetType="Button">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource Gray200}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray800}}" />
+    </Style>
+    
     <Style x:Key="NumberButton" TargetType="Button">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource Gray200}}"/>
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"/>
@@ -83,11 +88,6 @@
         <Setter Property="Padding" Value="0"/>
         <Setter Property="HorizontalOptions" Value="Center"/>
         <Setter Property="VerticalOptions" Value="Center"/>
-    </Style>
-
-    <Style x:Key="NumberButtonSelected" BasedOn="{StaticResource NumberButton}" TargetType="Button">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource Gray200}}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray800}}" />
     </Style>
 
     <Style TargetType="CheckBox">

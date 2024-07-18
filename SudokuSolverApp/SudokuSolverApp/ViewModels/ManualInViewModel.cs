@@ -38,7 +38,20 @@ namespace SudokuSolverApp.ViewModels
         [ObservableProperty]
         string text;
 
-        public byte? number;
+        //public byte? number;
+        public class Cell
+        {
+            public Cell(int i, int j)
+            {
+                this.i = i;
+                this.j = j;
+            }
+
+            public int i;
+            public int j;
+        }
+
+        public Cell selectedCell = null;
 
         ITesseract tesseract = null;
         ImageToSudokuService imageToSudokuService = null;
@@ -68,12 +81,27 @@ namespace SudokuSolverApp.ViewModels
 
         public void BoardClicked(int i, int j)
         {
-            if (number is null) return;
-            if (number < 1 || number > 9) return;
+            selectedCell = new(i, j);
+        }
 
-            Matrix[i, j] = (byte)number;
-            //this.OnPropertyChanged(new PropertyChangedEventArgs("matrix"));
+        public void NumberClicked(int n)
+        {
+            if (selectedCell == null) return;
+            if (n < 0 || n > 9) return;
+
+            int i = selectedCell.i, j = selectedCell.j;
+            Matrix[i, j] = (byte)n;
+
             this.MatrixChanged?.Invoke(this, new PropertyChangedEventArgs("matrix"), i, j);
+        }
+
+        [RelayCommand]
+        void CleanCell()
+        {
+            if (selectedCell == null) return;
+
+            Matrix[selectedCell.i, selectedCell.j] = 0;
+            this.MatrixChanged?.Invoke(this, new PropertyChangedEventArgs("matrix"), selectedCell.i, selectedCell.j);
         }
 
         [RelayCommand]
