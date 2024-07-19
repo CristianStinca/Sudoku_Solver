@@ -2,81 +2,140 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:ViewModels="clr-namespace:SudokuSolverApp.ViewModels"
+             x:DataType="ViewModels:ManualInViewModel"
              x:Class="SudokuSolverApp.Views.ManualInPage"
-             Title="Type Sudoku manually"
-             x:DataType="ViewModels:ManualInViewModel">
+             Title="Enter Sudoku">
+
+    <ContentPage.ToolbarItems>
+
+        <ToolbarItem Order="Secondary"
+                     Text="Erase board"
+                     Clicked="EraseBoardBttn_Clicked"/>
+
+        <ToolbarItem Order="Secondary"
+                     Text="Save board"/>
+        
+    </ContentPage.ToolbarItems>
 
     <ScrollView>
+        <Grid
+            x:Name="PageGrid"
+            ColumnDefinitions="*"
+            RowDefinitions="*">
 
-        <VerticalStackLayout Padding="16" Spacing="10">
-            <!--<Label
-                Text="The board."/>-->
 
-            <VerticalStackLayout
-                x:Name="BoxV"
-                HorizontalOptions="FillAndExpand"
-                Spacing="10">
+            <Grid RowDefinitions="*, Auto"
+                  Padding="16">
 
-                <Border Stroke="Black"
-                        StrokeThickness="4"
-                        StrokeShape="RoundRectangle 8">
-                    
-                    <Grid x:Name="MatrixGrid"
-                          ColumnDefinitions="*, *, *, 2, *, *, *, 2, *, *, *"
-                          RowDefinitions="*, *, *, 2, *, *, *, 2, *, *, *"
-                          HorizontalOptions="FillAndExpand"
-                          VerticalOptions="FillAndExpand"
-                          BindingContext="{Binding Matrix}">
+                <VerticalStackLayout Spacing="10">
 
-                        <BoxView Grid.Row="3"
-                                 HeightRequest="2"
-                                 Grid.ColumnSpan="11"
-                                 Color="Black"/>
+                    <Grid ColumnDefinitions="Auto, *, Auto, *, Auto, *, Auto">
+                        <BoxView Grid.Column="1"
+                                 HorizontalOptions="FillAndExpand"
+                                 Color="Transparent"/>
 
-                        <BoxView Grid.Row="7"
-                                 HeightRequest="2"
-                                 Grid.ColumnSpan="11"
-                                 Color="Black"/>
+                        <ImageButton Grid.Column="0"
+                                     HeightRequest="40"
+                                     WidthRequest="40"
+                                     Command="{Binding OpenCameraCommand}"
+                                     Source="camera.png"/>
 
-                        <BoxView Grid.Column="3"
-                                 WidthRequest="2"
-                                 Grid.RowSpan="11"
-                                 Color="Black"
-                                 VerticalOptions="FillAndExpand"/>
+                        <ImageButton Grid.Column="2"
+                                     HeightRequest="40"
+                                     WidthRequest="40"
+                                     Source="gallery.png"
+                                     Clicked="PullFromMemoryBttn_Clicked"/>
 
-                        <BoxView Grid.Column="7"
-                                 WidthRequest="2"
-                                 Grid.RowSpan="11"
-                                 VerticalOptions="FillAndExpand"
-                                 Color="Black"/>
+                        <ImageButton Grid.Column="4"
+                                     HeightRequest="40"
+                                     WidthRequest="40"
+                                     Source="save.png"/>
 
+                        <ImageButton Grid.Column="6"
+                                     HeightRequest="40"
+                                     WidthRequest="40"
+                                     Source="trash.png"
+                                     Clicked="EraseBoardBttn_Clicked"/>
                     </Grid>
-                </Border>
 
-            </VerticalStackLayout>
+                    <Grid ColumnDefinitions="*"
+                          RowDefinitions="*">
 
-            <Button Text="Solve!"
-                    Command="{Binding SolveCommand}"
-                    />
-                    <!--Clicked="Button_Clicked"-->
+                        <Grid x:Name="MatrixGrid"
+                              ColumnDefinitions="*, *, *, 2, *, *, *, 2, *, *, *"
+                              RowDefinitions="*, *, *, 2, *, *, *, 2, *, *, *"
+                              HorizontalOptions="FillAndExpand"
+                              VerticalOptions="FillAndExpand"
+                              BindingContext="{Binding Matrix}"
+                              Padding="{Binding StrokeThickness, Source={x:Reference OuterBorder}}"/>
 
-            <Button Text="Erase board"
-                    Clicked="Button_Clicked_1"/>
+                        <Border x:Name="OuterBorder"
+                                Style="{StaticResource BoardBorder}"/>
 
-            <Grid x:Name="NumbersGrid"
-                ColumnDefinitions="*, *, *, *, *, *, *, *, *"
-                RowDefinitions="*"
-                ColumnSpacing="2">
+                        <Grid ColumnDefinitions="*, 2, *, 2, *, 4, *, 2, *, 2, *, 4, *, 2, *, 2, *"
+                              Padding="{Binding StrokeThickness, Source={x:Reference OuterBorder}}">
+                            <Rectangle Grid.Column="1"/>
+                            <Rectangle Grid.Column="3"/>
+                            <Rectangle Grid.Column="5"/>
+                            <Rectangle Grid.Column="7"/>
+                            <Rectangle Grid.Column="9"/>
+                            <Rectangle Grid.Column="11"/>
+                            <Rectangle Grid.Column="13"/>
+                            <Rectangle Grid.Column="15"/>
+                        </Grid>
+
+                        <Grid RowDefinitions="*, 2, *, 2, *, 4, *, 2, *, 2, *, 4, *, 2, *, 2, *"
+                              Padding="{Binding StrokeThickness, Source={x:Reference OuterBorder}}">
+                            <Rectangle Grid.Row="1"/>
+                            <Rectangle Grid.Row="3"/>
+                            <Rectangle Grid.Row="5"/>
+                            <Rectangle Grid.Row="7"/>
+                            <Rectangle Grid.Row="9"/>
+                            <Rectangle Grid.Row="11"/>
+                            <Rectangle Grid.Row="13"/>
+                            <Rectangle Grid.Row="15"/>
+                        </Grid>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="Auto, *, Auto, *, Auto">
+                        <ImageButton Grid.Column="0"
+                                     HeightRequest="40"
+                                     WidthRequest="40"
+                                     Source="back.png"/>
+
+                        <BoxView Grid.Column="1"
+                                 HorizontalOptions="FillAndExpand"
+                                 Color="Transparent"/>
+
+                        <ImageButton Grid.Column="2"
+                                     HeightRequest="40"
+                                     WidthRequest="40"
+                                     Command="{Binding CleanCellCommand}"
+                                     Source="clear.png"/>
+
+                        <ImageButton Grid.Column="4"
+                                     HeightRequest="40"
+                                     WidthRequest="40"
+                                     Source="forward.png"/>
+                    </Grid>
+
+                    <Grid x:Name="NumbersGrid"
+                          ColumnDefinitions="*, *, *, *, *, *, *, *, *"
+                          RowDefinitions="*"
+                          ColumnSpacing="2"/>
+
+                </VerticalStackLayout>
+
+                <Button Grid.Row="1"
+                        Text="Solve!"
+                        Clicked="Solve_Clicked"
+                        Command="{Binding SolveCommand}"/>
+
             </Grid>
 
-            <!--
-            <Entry Placeholder="Enter Task"
-                   Text="{Binding Text}"/>
-
-            <Button Text="Try"
-                    Command="{Binding TextTaskCommand}"/>
-            -->
-
-        </VerticalStackLayout>
+            <ActivityIndicator IsRunning="False"
+                               x:Name="LoadingIndicator"
+                               WidthRequest="100"/>
+        </Grid>
     </ScrollView>
 </ContentPage>

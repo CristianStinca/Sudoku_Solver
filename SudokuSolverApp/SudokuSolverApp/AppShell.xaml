@@ -8,23 +8,24 @@
     Shell.FlyoutBehavior="Disabled">
 
     <TabBar>
-        <!--<ShellContent
-            Title="Home"
-            Icon="icon_about.png"
-            ContentTemplate="{DataTemplate local:MainPage}"
-            Route="MainPage" />-->
-
-        <!--<ShellContent
-            Title="Second"
-            Icon="icon_notes.png"
-            ContentTemplate="{DataTemplate local:SecondPage}"
-            Route="SecondPage"/>-->
-
         <ShellContent
             Title="Manual"  
             Icon="icon_notes.png"
             ContentTemplate="{DataTemplate views:ManualInPage}"
             Route="ManualInPage"/>
+
+        <!--
+        <ShellContent
+            Title="Camera"  
+            Icon="icon_about.png"
+            ContentTemplate="{DataTemplate views:CameraPage}"
+            Route="CameraPage"/>
+-->
+        <ShellContent
+            Title="Debugging"  
+            Icon="icon_about.png"
+            ContentTemplate="{DataTemplate views:DebuggingPage}"
+            Route="CameraPage"/>
     </TabBar>
 
 </Shell>

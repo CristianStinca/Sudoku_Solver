@@ -9,6 +9,8 @@ namespace SudokuSolverApp
             InitializeComponent();
 
             Routing.RegisterRoute(nameof(ResultPage), typeof(ResultPage));
+            Routing.RegisterRoute(nameof(CameraPage), typeof(CameraPage));
+            Routing.RegisterRoute(nameof(DebuggingPage), typeof(DebuggingPage));
         }
     }
 }

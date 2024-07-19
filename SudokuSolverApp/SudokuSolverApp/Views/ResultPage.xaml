@@ -5,45 +5,58 @@
              x:Class="SudokuSolverApp.Views.ResultPage"
              x:DataType="ViewModels:ResultPageViewModel"
              Title="Solved Sudoku!">
-
-    <VerticalStackLayout Padding="16" Spacing="10">
+    
+    <StackLayout Padding="16" Spacing="10">
         
-        <VerticalStackLayout>
-            <Border Stroke="Black"
-                StrokeThickness="4"
-                StrokeShape="RoundRectangle 8">
-                
-                    <Grid x:Name="MatrixGrid"
-                      ColumnDefinitions="*, *, *, 2, *, *, *, 2, *, *, *"
-                      RowDefinitions="*, *, *, 2, *, *, *, 2, *, *, *"
-                      HorizontalOptions="FillAndExpand"
-                      VerticalOptions="FillAndExpand"
-                      BindingContext="{Binding Matrix}">
+        <Grid ColumnDefinitions="*"
+              RowDefinitions="*, Auto, *"
+              VerticalOptions="FillAndExpand">
 
-                    <BoxView Grid.Row="3"
-                        HeightRequest="2"
-                        Grid.ColumnSpan="11"
-                        Color="Black"/>
+            <Rectangle Grid.Row="0"
+                       BackgroundColor="Transparent"
+                       VerticalOptions="FillAndExpand"/>
+            
+            <Rectangle Grid.Row="2"
+                       BackgroundColor="Transparent"
+                       VerticalOptions="FillAndExpand"/>
 
-                    <BoxView Grid.Row="7"
-                        HeightRequest="2"
-                        Grid.ColumnSpan="11"
-                        Color="Black"/>
+            <Grid Grid.Row="1"
+                  x:Name="MatrixGrid"
+                  ColumnDefinitions="*, *, *, 2, *, *, *, 2, *, *, *"
+                  RowDefinitions="*, *, *, 2, *, *, *, 2, *, *, *"
+                  HorizontalOptions="FillAndExpand"
+                  BindingContext="{Binding Matrix}"
+                  Padding="{Binding StrokeThickness, Source={x:Reference OuterBorder}}"/>
 
-                    <BoxView Grid.Column="3"
-                        WidthRequest="2"
-                        Grid.RowSpan="11"
-                        Color="Black"
-                        VerticalOptions="FillAndExpand"/>
+            <Border Grid.Row="1"
+                    x:Name="OuterBorder"
+                    Style="{StaticResource BoardBorder}"/>
 
-                    <BoxView Grid.Column="7"
-                        WidthRequest="2"
-                        Grid.RowSpan="11"
-                        VerticalOptions="FillAndExpand"
-                        Color="Black"/>
+            <Grid Grid.Row="1"
+                  ColumnDefinitions="*, 2, *, 2, *, 4, *, 2, *, 2, *, 4, *, 2, *, 2, *"
+                  Padding="{Binding StrokeThickness, Source={x:Reference OuterBorder}}">
+                <Rectangle Grid.Column="1"/>
+                <Rectangle Grid.Column="3"/>
+                <Rectangle Grid.Column="5"/>
+                <Rectangle Grid.Column="7"/>
+                <Rectangle Grid.Column="9"/>
+                <Rectangle Grid.Column="11"/>
+                <Rectangle Grid.Column="13"/>
+                <Rectangle Grid.Column="15"/>
+            </Grid>
 
-                </Grid>
-            </Border>
-        </VerticalStackLayout>
-    </VerticalStackLayout>
+            <Grid Grid.Row="1"
+                  RowDefinitions="*, 2, *, 2, *, 4, *, 2, *, 2, *, 4, *, 2, *, 2, *"
+                  Padding="{Binding StrokeThickness, Source={x:Reference OuterBorder}}">
+                <Rectangle Grid.Row="1"/>
+                <Rectangle Grid.Row="3"/>
+                <Rectangle Grid.Row="5"/>
+                <Rectangle Grid.Row="7"/>
+                <Rectangle Grid.Row="9"/>
+                <Rectangle Grid.Row="11"/>
+                <Rectangle Grid.Row="13"/>
+                <Rectangle Grid.Row="15"/>
+            </Grid>
+        </Grid>
+    </StackLayout>
 </ContentPage>

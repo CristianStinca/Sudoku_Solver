@@ -1,43 +1,37 @@
-﻿using Microsoft.Maui.Controls.StyleSheets;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Maui.Controls.StyleSheets;
 using SudokuLogicLibr.SudokuLogic;
 using SudokuSolverApp.ViewModels;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing.Text;
+using TesseractOcrMaui;
 
 namespace SudokuSolverApp.Views;
 
 public partial class ManualInPage : ContentPage
 {
     private Button[,] _matrix = new Button[9, 9];
+    private Button[] _numbers_buttons = new Button[9];
+    private bool _is_loading = false;
     private readonly ManualInViewModel _vm;
 
-    public ManualInPage(ManualInViewModel vm)
+    private bool _left_to_camera = false;
+
+    public ManualInPage(ManualInViewModel vm, ITesseract tesseract)
     {
         InitializeComponent();
         BindingContext = vm;
         this._vm = vm;
+        this._vm.SetTesseract(tesseract);
+
 
         for (int i = 0; i < _matrix.GetLength(0); i++)
         {
             for (int j = 0; j < _matrix.GetLength(1); j++)
             {
-                Button button = new Button();
-                if (App.Current.Resources.TryGetValue("White", out object colorvalue1))
-                    button.BackgroundColor = (Color)colorvalue1;
-                
-                if (App.Current.Resources.TryGetValue("Black", out object colorvalue2))
-                    button.TextColor = (Color)colorvalue2;
-                
-                if (App.Current.Resources.TryGetValue("Gray100", out object colorvalue3))
-                    button.BorderColor = (Color)colorvalue3;
-
-                button.Padding = 0;
-                button.CornerRadius = 0;
-                button.BorderWidth = 1;
-                button.FontSize = 20;
-
-                //if (Application.Current.RequestedTheme == AppTheme.Dark)
+                Button button = new Button() { Style = (Style)Application.Current.Resources["BoardButton"] };
 
                 _matrix[i, j] = button;
 
@@ -55,67 +49,187 @@ public partial class ManualInPage : ContentPage
 
         for (int i = 1; i < 10; i++)
         {
-            Button button = new Button();
-            button.BackgroundColor = Colors.DimGray;
-            button.Text = i.ToString();
-            button.Padding = 0;
-            byte n = (byte)i;
-            button.Clicked += (o, e) => OnNumberClicked(o, e, n);
+            Button button = new Button() { Style = (Style)Application.Current.Resources["NumberButton"] };
 
+            button.Text = i.ToString();
+            byte n = (byte)i;
+            button.Clicked += (o, e) => _vm.NumberClicked(n);
+
+            _numbers_buttons[i-1] = button;
             NumbersGrid.Add(button, i-1);
         }
 
         _vm.MatrixChanged += OnMatrixChanged;
         _vm.PropertyChanged += OnMatrixClear;
+
+        _vm.MatrixCalculated += OnMatrixCalculated;
+        _vm.MatrixFinished += OnMatrixFinished;
+        _vm.MatrixFailedCalculated += OnMatrixFailedCalculated;
+        _vm.MatrixFailedReadImg += OnMatrixFailedReadImg;
+        _vm.LeftToCameraPage += OnNavigatedToCamera;
     }
 
     protected override void LayoutChildren(double x, double y, double width, double height)
     {
         base.LayoutChildren(x, y, width, height);
 
-        var w = _matrix[0, 0].Width;
-        for (int i = 0; i < _matrix.GetLength(0); i++)
+        MatrixGrid.HeightRequest = MatrixGrid.Width;
+        NumbersGrid.HeightRequest = _numbers_buttons.First().Width;
+    }
+
+    protected override void OnNavigatedFrom(NavigatedFromEventArgs args)
+    {
+        base.OnNavigatedFrom(args);
+
+        StopLoading();
+    }
+
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+
+        if (_left_to_camera)
         {
-            for (int j = 0; j < _matrix.GetLength(1); j++)
-            {
-                _matrix[i, j].HeightRequest = w;
-            }
+            _left_to_camera = false;
+            _vm.PullFromCamera();
+            StartLoading();
         }
+    }
+
+    private void OnNavigatedToCamera()
+    {
+        _left_to_camera = true;
     }
 
     private void OnBoardClicked(object sender, EventArgs e, int i, int j)
     {
-        _vm.BoardClicked(i, j);
-    }
+        if (_vm.selectedCell != null)
+            _matrix[_vm.selectedCell.i, _vm.selectedCell.j].Style = (Style)Application.Current.Resources["BoardButton"];
 
-    private void OnNumberClicked(object sender, EventArgs e, byte n)
-    {
-        _vm.number = n;
+        _vm.BoardClicked(i, j);
+
+        _matrix[i, j].Style = (Style)Application.Current.Resources["BoardButtonSelected"];
     }
 
     private void OnMatrixChanged(object sender, EventArgs e, int i, int j)
     {
         if ((e as PropertyChangedEventArgs).PropertyName != "matrix") return;
 
-        _matrix[i, j].Text = _vm.Matrix[i, j].ToString();
+        int val = _vm.Matrix[i, j];
+
+        if (val == 0)
+            _matrix[i, j].Text = String.Empty;
+        else
+            _matrix[i, j].Text = val.ToString();
     }
 
     private void OnMatrixClear(object sender, EventArgs e)
     {
         if ((e as PropertyChangedEventArgs).PropertyName != "matrix") return;
 
-        for (int i = 0; i < _matrix.GetLength(0); i++)
+        var il = _matrix.GetLength(0);
+        for (int i = 0; i < il; i++)
         {
-            for (int j = 0; j < _matrix.GetLength(1); j++)
+            var jl = _matrix.GetLength(1);
+            for (int j = 0; j < jl; j++)
             {
-                _matrix[i, j].Text = String.Empty;
+                int val = _vm.Matrix[i, j];
+                if (val == 0)
+                    _matrix[i, j].Text = String.Empty;
+                else
+                    _matrix[i, j].Text = $"{val}";
             }
         }
     }
 
-    private void Button_Clicked_1(object sender, EventArgs e)
+    private void PullFromMemoryBttn_Clicked(object sender, EventArgs e)
     {
+        StartLoading();
+        this._vm.PullFromMemory();
+
+        //WeakReferenceMessenger.Default.Register<string>(this, (r, m) =>
+        //{
+        //    //Console.WriteLine($"EVENT {m}");
+        //    if (m == "TASK FINISHED")
+        //    {
+        //        MainThread.InvokeOnMainThreadAsync(async () =>
+        //        {
+        //            await DisplayAlert("Result", "Everything was read!", "OK");
+        //        });
+        //    }
+        //    if (m == "DOWNLOAD FAILED")
+        //    {
+        //        Task.Run(async () =>
+        //        {
+        //            await DisplayAlert("Result", "The image couldn't be downloaded!", "OK");
+        //        });
+        //    }
+        //    if (m == "READING FAILED")
+        //    {
+        //        Task.Run(async () =>
+        //        {
+        //            await DisplayAlert("Result", "The image couldn't be read!", "OK");
+        //        });
+        //    }
+
+        //});
+    }
+
+    public void OnMatrixCalculated()
+    {
+        MainThread.InvokeOnMainThreadAsync(async () =>
+        {
+            await DisplayAlert("Result", "Everything was read!", "OK");
+        });
+
+        StopLoading();
+    }
+    public void OnMatrixFinished()
+    {
+        StopLoading();
+    }
+    public void OnMatrixFailedCalculated()
+    {
+        MainThread.InvokeOnMainThreadAsync(async () =>
+        {
+            await DisplayAlert("Result", "Cannot extract from the image!", "OK");
+        });
+
+        StopLoading();
+    }
+    public void OnMatrixFailedReadImg()
+    {
+        MainThread.InvokeOnMainThreadAsync(async () =>
+        {
+            await DisplayAlert("Result", "Image cannot be saved!", "OK");
+        });
+
+        StopLoading();
+    }
+
+    private void EraseBoardBttn_Clicked(object sender, EventArgs e)
+    {
+        if (_vm.selectedCell != null)
+        {
+            _matrix[_vm.selectedCell.i, _vm.selectedCell.j].Style = (Style)Application.Current.Resources["BoardButton"];
+            _vm.selectedCell = null;
+        }
+
         _vm.ClearMatrix();
     }
 
+    private void Solve_Clicked(object sender, EventArgs e)
+    {
+        StartLoading();
+    }
+
+    private void StartLoading()
+    {
+        LoadingIndicator.IsRunning = true;
+    }
+
+    private void StopLoading()
+    {
+        LoadingIndicator.IsRunning = false;
+    }
 }
