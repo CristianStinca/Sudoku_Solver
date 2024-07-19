@@ -1,8 +1,8 @@
 # Sudoku_Solver
-.NET MAUI app that allows to automatically solve a sudoku puzzle.
+.NET MAUI app that allows to automatically solve a sudoku puzzle. Now with ability to extract if from the camera/media.
 
 ### How to run the project?
-You will need .NET MAUI on .NET 7.0. From there build the project on an emulator/connected phone. Currently only the Android 21.0 version is supported.
+You will need .NET MAUI on .NET 8.0. From there build the project on an emulator/connected phone. Currently only the Android 21.0 version is supported.
 
 ### App usecase:
 <table style="border-width: 0;">
@@ -14,12 +14,10 @@ You will need .NET MAUI on .NET 7.0. From there build the project on an emulator
 </table>
 
 ### Aspirations for the project
-Learn the MVVM paradigm along with the CommunityToolkit.Mvvm package.
+Learn the MVVM paradigm along with the CommunityToolkit.Mvvm package. Get an introduction into some of the visual recognition algorithms.
 
 ### Future plans
 <ul>
-  <li>Add a ML algorithm to scan an image and extract the sudoku automatically.</li>
-  <li>Add a Camera option to sovle the sudoku in reak time.</li>
   <li>Adapt the app for Windows/iOS.</li>
   <li>Optimize the processes.</li>
 </ul>
