@@ -37,7 +37,7 @@
                      HeightRequest="100"/>
 
             <VerticalStackLayout Grid.Row="2">
-                <Button Text="SMILE MFK"
+                <Button Text="Capture"
                         Command="{Binding CaptureImageCommand, Source={x:Reference Camera}}"
                         CommandParameter="{Binding Token}"/>
             </VerticalStackLayout>
