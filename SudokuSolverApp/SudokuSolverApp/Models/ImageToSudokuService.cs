@@ -29,6 +29,7 @@ namespace SudokuSolverApp.Models
         public static SKBitmap skewedImg;
         public static SKBitmap[,] separatedCells = new SKBitmap[9, 9];
 #endif
+
         public ITesseract tes;
 
         public ImageToSudokuService(ITesseract tesseract)

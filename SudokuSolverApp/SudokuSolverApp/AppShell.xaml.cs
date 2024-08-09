@@ -10,10 +10,10 @@ namespace SudokuSolverApp
 
             Routing.RegisterRoute(nameof(ResultPage), typeof(ResultPage));
             Routing.RegisterRoute(nameof(CameraPage), typeof(CameraPage));
+            Routing.RegisterRoute(nameof(DebuggingPage), typeof(DebuggingPage));
 
 #if DEBUG
             DebugContent.IsVisible = true;
-            Routing.RegisterRoute(nameof(DebuggingPage), typeof(DebuggingPage));
 #endif
         }
     }

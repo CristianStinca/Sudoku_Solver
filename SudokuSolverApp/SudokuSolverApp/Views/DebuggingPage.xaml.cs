@@ -20,9 +20,11 @@ public partial class DebuggingPage : ContentPage
         picker_i.SelectedIndexChanged += Button_Clicked;
         picker_j.SelectedIndexChanged += Button_Clicked;
     }
+#endif
 
     private void Mycanvas_PaintSurface(object sender, SKPaintSurfaceEventArgs args)
     {
+#if DEBUG
         SKSurface surface = args.Surface;
         SKCanvas canvas = surface.Canvas;
 
@@ -52,44 +54,54 @@ public partial class DebuggingPage : ContentPage
                 Debug.WriteLine(e.Message);
             }
         }
+#endif
     }
 
-    private void ToolbarItem_Clicked(object sender, EventArgs e)
+        private void ToolbarItem_Clicked(object sender, EventArgs e)
     {
+#if DEBUG
         this._bitmap = ImageToSudokuService.originalImg;
 
         mycanvas.InvalidateSurface();
+#endif
     }
 
     private void ToolbarItem_Clicked_1(object sender, EventArgs e)
     {
+#if DEBUG
         this._bitmap = ImageToSudokuService.bwImg;
 
         mycanvas.InvalidateSurface();
+#endif
     }
 
     private void ToolbarItem_Clicked_2(object sender, EventArgs e)
     {
+#if DEBUG
         this._bitmap = ImageToSudokuService.conturedImg;
 
         mycanvas.InvalidateSurface();
+#endif
     }
 
     private void ToolbarItem_Clicked_3(object sender, EventArgs e)
     {
+#if DEBUG
         this._bitmap = ImageToSudokuService.skewedImg;
 
         mycanvas.InvalidateSurface();
+#endif
     }
 
     private void Button_Clicked(object sender, EventArgs e)
     {
+#if DEBUG
         Byte i = (Byte)picker_i.SelectedItem;
         Byte j = (Byte)picker_j.SelectedItem;
 
         this._bitmap = ImageToSudokuService.separatedCells[i, j];
 
         mycanvas.InvalidateSurface();
-    }
 #endif
+    }
 }
