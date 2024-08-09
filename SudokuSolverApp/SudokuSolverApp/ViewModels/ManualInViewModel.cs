@@ -31,6 +31,9 @@ namespace SudokuSolverApp.ViewModels
         
         public event LeftToCameraPageHandler LeftToCameraPage;
         public delegate void LeftToCameraPageHandler();
+        
+        public event RemoveFocusHandler RemoveFocus;
+        public delegate void RemoveFocusHandler();
 
         public event MatrixChangedHandler MatrixChanged;
         public delegate void MatrixChangedHandler(object obj, EventArgs e, int i, int j);
@@ -64,6 +67,9 @@ namespace SudokuSolverApp.ViewModels
         ITesseract tesseract = null;
         ImageToSudokuService imageToSudokuService = null;
 
+        Stack<int[,]> previousStates = new();
+        Stack<int[,]> forwardStates = new();
+
         public ManualInViewModel()
         {
             for (int i = 0; i < matrix.GetLength(0); i++)
@@ -77,10 +83,57 @@ namespace SudokuSolverApp.ViewModels
             MatrixCalculated += OnMatrixCalculated;
         }
 
+        private int[,] GetPresentIntArrClone()
+        {
+            int[,] clone = new int[9, 9];
+            for (int i = 0; i < Matrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < Matrix.GetLength(1); j++)
+                {
+                    clone[i, j] = Matrix[i, j];
+                }
+            }
+
+            return clone;
+        }
+
+        private void RegisterMatrixChange()
+        {
+            previousStates.Push(GetPresentIntArrClone());
+        }
+
+        [RelayCommand]
+        void OnBack()
+        {
+            if (previousStates.TryPop(out var forw))
+            {
+                forwardStates.Push(GetPresentIntArrClone());
+                Matrix = forw;
+                this.OnPropertyChanged("matrix");
+                RemoveFocus.Invoke();
+            }
+
+        }
+
+        [RelayCommand]
+        void OnForward()
+        {
+            if (forwardStates.TryPop(out var prev))
+            {
+                previousStates.Push(GetPresentIntArrClone());
+                Matrix = prev;
+                this.OnPropertyChanged("matrix");
+                RemoveFocus.Invoke();
+            }
+
+        }
+
         public void OnMatrixCalculated()
         {
             MainThread.BeginInvokeOnMainThread(() =>
             {
+                RegisterMatrixChange();
+
                 Matrix = temp_matrix;
 
                 this.OnPropertyChanged("matrix");
@@ -96,6 +149,7 @@ namespace SudokuSolverApp.ViewModels
         {
             if (selectedCell == null) return;
             if (n < 0 || n > 9) return;
+            RegisterMatrixChange();
 
             int i = selectedCell.i, j = selectedCell.j;
             Matrix[i, j] = (byte)n;
@@ -107,6 +161,7 @@ namespace SudokuSolverApp.ViewModels
         void CleanCell()
         {
             if (selectedCell == null) return;
+            RegisterMatrixChange();
 
             Matrix[selectedCell.i, selectedCell.j] = 0;
             this.MatrixChanged?.Invoke(this, new PropertyChangedEventArgs("matrix"), selectedCell.i, selectedCell.j);

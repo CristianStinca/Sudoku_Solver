@@ -41,11 +41,6 @@ public partial class ResultPage : ContentPage
 
         foreach (( int i, int j ) in _vm.given_fields)
         {
-            //if (App.Current.Resources.TryGetValue("Yellow300Accent", out object primaryColor))
-            //    _matrix[i, j].BackgroundColor = (Color)primaryColor;
-            //else
-            //    _matrix[i, j].BackgroundColor = Colors.Coral;
-
             _matrix[i, j].Style = (Style)Application.Current.Resources["BoardButtonSaved"];
         }
     }
