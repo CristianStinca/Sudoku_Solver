@@ -243,7 +243,7 @@ namespace SudokuSolverApp.ViewModels
                 {
                     arr = await imageToSudokuService.GetFromPathAsync(cachePath);
                 }
-                catch (ArgumentException ex)
+                catch (ArgumentException)
                 {
                     MatrixFailedCalculated?.Invoke();
                 }

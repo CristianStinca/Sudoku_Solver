@@ -10,9 +10,9 @@
     <SingleProject>true</SingleProject>
     <ImplicitUsings>enable</ImplicitUsings>
     <!-- Display name -->
-    <ApplicationTitle>SudokuSolverApp</ApplicationTitle>
+    <ApplicationTitle>Sudoku Solver</ApplicationTitle>
     <!-- App Identifier -->
-    <ApplicationId>com.companyname.sudokusolverapp</ApplicationId>
+    <ApplicationId>com.cristianstinca.sudokusolverapp</ApplicationId>
     <ApplicationIdGuid>c5f7aa21-c30f-493a-b836-d25763cd2113</ApplicationIdGuid>
     <!-- Versions -->
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>

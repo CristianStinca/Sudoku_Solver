@@ -42,7 +42,9 @@ namespace SudokuSolverApp
             builder.Services.AddTransient<CameraPage>();
             builder.Services.AddTransient<CameraViewModel>();
 
+#if DEBUG
             builder.Services.AddSingleton<DebuggingPage>();
+#endif
 
             return builder.Build();
         }
