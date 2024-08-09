@@ -14,7 +14,6 @@ public partial class ManualInPage : ContentPage
 {
     private Button[,] _matrix = new Button[9, 9];
     private Button[] _numbers_buttons = new Button[9];
-    private bool _is_loading = false;
     private readonly ManualInViewModel _vm;
 
     private bool _left_to_camera = false;
