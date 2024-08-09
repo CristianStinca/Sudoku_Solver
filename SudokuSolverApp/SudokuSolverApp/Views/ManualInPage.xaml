@@ -29,7 +29,7 @@
 
                 <VerticalStackLayout Spacing="10">
 
-                    <Grid ColumnDefinitions="Auto, *, Auto, *, Auto, *, Auto">
+                    <Grid ColumnDefinitions="Auto, *, Auto, *, Auto">
                         <BoxView Grid.Column="1"
                                  HorizontalOptions="FillAndExpand"
                                  Color="Transparent"/>
@@ -45,12 +45,12 @@
                                      WidthRequest="40"
                                      Source="gallery.png"
                                      Clicked="PullFromMemoryBttn_Clicked"/>
-
+<!--
                         <ImageButton Grid.Column="4"
                                      HeightRequest="40"
                                      WidthRequest="40"
                                      Source="save.png"/>
-
+-->
                         <ImageButton Grid.Column="6"
                                      HeightRequest="40"
                                      WidthRequest="40"
@@ -101,6 +101,7 @@
                         <ImageButton Grid.Column="0"
                                      HeightRequest="40"
                                      WidthRequest="40"
+                                     Command="{Binding BackCommand}"
                                      Source="back.png"/>
 
                         <BoxView Grid.Column="1"
@@ -116,6 +117,7 @@
                         <ImageButton Grid.Column="4"
                                      HeightRequest="40"
                                      WidthRequest="40"
+                                     Command="{Binding ForwardCommand}"
                                      Source="forward.png"/>
                     </Grid>
 

@@ -67,6 +67,7 @@ public partial class ManualInPage : ContentPage
         _vm.MatrixFailedCalculated += OnMatrixFailedCalculated;
         _vm.MatrixFailedReadImg += OnMatrixFailedReadImg;
         _vm.LeftToCameraPage += OnNavigatedToCamera;
+        _vm.RemoveFocus += () => RemoveBoardFocus();
     }
 
     protected override void LayoutChildren(double x, double y, double width, double height)
@@ -146,33 +147,6 @@ public partial class ManualInPage : ContentPage
     {
         StartLoading();
         this._vm.PullFromMemory();
-
-        //WeakReferenceMessenger.Default.Register<string>(this, (r, m) =>
-        //{
-        //    //Console.WriteLine($"EVENT {m}");
-        //    if (m == "TASK FINISHED")
-        //    {
-        //        MainThread.InvokeOnMainThreadAsync(async () =>
-        //        {
-        //            await DisplayAlert("Result", "Everything was read!", "OK");
-        //        });
-        //    }
-        //    if (m == "DOWNLOAD FAILED")
-        //    {
-        //        Task.Run(async () =>
-        //        {
-        //            await DisplayAlert("Result", "The image couldn't be downloaded!", "OK");
-        //        });
-        //    }
-        //    if (m == "READING FAILED")
-        //    {
-        //        Task.Run(async () =>
-        //        {
-        //            await DisplayAlert("Result", "The image couldn't be read!", "OK");
-        //        });
-        //    }
-
-        //});
     }
 
     public void OnMatrixCalculated()
@@ -209,13 +183,17 @@ public partial class ManualInPage : ContentPage
 
     private void EraseBoardBttn_Clicked(object sender, EventArgs e)
     {
+        RemoveBoardFocus();
+        _vm.ClearMatrix();
+    }
+
+    private void RemoveBoardFocus()
+    {
         if (_vm.selectedCell != null)
         {
             _matrix[_vm.selectedCell.i, _vm.selectedCell.j].Style = (Style)Application.Current.Resources["BoardButton"];
             _vm.selectedCell = null;
         }
-
-        _vm.ClearMatrix();
     }
 
     private void Solve_Clicked(object sender, EventArgs e)
